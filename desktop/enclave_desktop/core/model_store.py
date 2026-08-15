@@ -56,7 +56,7 @@ def data_dir() -> Path:
         base = Path(os.environ.get("LOCALAPPDATA", Path.home() / "AppData" / "Local"))
     else:
         base = Path(os.environ.get("XDG_DATA_HOME", Path.home() / ".local" / "share"))
-    path = base / "dicio-desktop"
+    path = base / "enclave-desktop"
     path.mkdir(parents=True, exist_ok=True)
     return path
 

@@ -8,11 +8,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from dicio_desktop.core import ollama_registry as reg  # noqa: E402
-from dicio_desktop.core.protocol import (  # noqa: E402
+from enclave_desktop.core import ollama_registry as reg  # noqa: E402
+from enclave_desktop.core.protocol import (  # noqa: E402
     Message, ToolDef, ToolParam, build_prompt, index_of_complete_json_object, parse_tool_call,
 )
-from dicio_desktop.tools.builtin import CalculatorTool, evaluate_expression  # noqa: E402
+from enclave_desktop.tools.builtin import CalculatorTool, evaluate_expression  # noqa: E402
 
 
 class TestOllamaReference(unittest.TestCase):
@@ -109,9 +109,9 @@ class TestToolCallParsing(unittest.TestCase):
 class TestPrompt(unittest.TestCase):
     def test_tools_are_injected_into_the_system_message(self):
         tools = [ToolDef("calculate", "Do maths.", [ToolParam("expression", "the sum")])]
-        prompt = build_prompt([Message("system", "You are Dicio."),
+        prompt = build_prompt([Message("system", "You are Enclave."),
                                Message("user", "two plus two")], tools)
-        self.assertIn("You are Dicio.", prompt)
+        self.assertIn("You are Enclave.", prompt)
         self.assertIn("calculate: Do maths.", prompt)
         self.assertTrue(prompt.endswith("<|im_start|>assistant\n"))
 

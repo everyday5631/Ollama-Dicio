@@ -1,4 +1,4 @@
-"""Entry point: ``python -m dicio_desktop``."""
+"""Entry point: ``python -m enclave_desktop``."""
 
 from __future__ import annotations
 

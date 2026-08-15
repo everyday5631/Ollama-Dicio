@@ -1,0 +1,118 @@
+name: Desktop (Windows)
+
+# PyInstaller cannot cross-compile: a Windows executable has to be produced on Windows, and the
+# Linux archive attached to a release is built on Linux. This workflow supplies the Windows half.
+#
+# Trigger it either by publishing a release (the .zip is attached to it automatically) or by hand
+# from the Actions tab, in which case the build lands in the run's artifacts instead.
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing release tag to attach the build to (blank = artifact only)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: desktop
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pyinstaller
+        # llama-cpp-python is in requirements.txt and may build from source here; if it does not
+        # resolve, the app still runs (speech recognition does not depend on it), so a failure to
+        # install it must not fail the build
+        continue-on-error: true
+
+      - name: Install GUI and speech dependencies (required)
+        run: pip install PySide6 vosk sounddevice numpy pyinstaller
+
+      - name: Run the tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Build
+        run: pyinstaller --noconfirm --clean enclave-desktop.spec
+
+      - name: Smoke-test the executable
+        shell: pwsh
+        run: |
+          # Start it, give Qt a moment to create a window, then check it is still alive. A crash
+          # on startup -- a missing hidden import, say -- exits immediately and is caught here.
+          $p = Start-Process -FilePath "dist\enclave-desktop\enclave-desktop.exe" -PassThru
+          Start-Sleep -Seconds 20
+          if ($p.HasExited) {
+            Write-Error "enclave-desktop.exe exited with $($p.ExitCode) instead of staying open"
+            exit 1
+          }
+          Stop-Process -Id $p.Id -Force
+          Write-Host "executable stayed running"
+
+      - name: Add the readme
+        shell: pwsh
+        run: |
+          @"
+          Enclave Desktop - portable Windows build
+
+          Run enclave-desktop.exe. Nothing to install: Python and Qt are inside this
+          folder. Keep the _internal folder next to the executable.
+
+          On first launch it downloads a Vosk speech model (~40 MB) and a language
+          model (~290 MB by default), cached under %LOCALAPPDATA%\enclave-desktop.
+          Both downloads resume if interrupted. After that Enclave makes no network
+          requests at all.
+
+          Local answers need llama-cpp-python, which is not bundled because it
+          compiles against your CPU:
+
+              pip install llama-cpp-python
+
+          Speech recognition works without it; the status bar will say the language
+          model is unavailable.
+
+          Windows SmartScreen will warn about an unsigned executable. This build is
+          not code-signed.
+          "@ | Out-File -FilePath "dist\enclave-desktop\README.txt" -Encoding utf8
+
+      - name: Package
+        shell: pwsh
+        run: |
+          Compress-Archive -Path "dist\enclave-desktop\*" `
+                           -DestinationPath "enclave-desktop-windows-x86_64.zip"
+          Get-FileHash "enclave-desktop-windows-x86_64.zip" -Algorithm SHA256 |
+            Format-List | Out-File -FilePath "SHA256-windows.txt" -Encoding utf8
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: enclave-desktop-windows
+          path: |
+            desktop/enclave-desktop-windows-x86_64.zip
+            desktop/SHA256-windows.txt
+
+      - name: Attach to the release
+        if: github.event_name == 'release' || inputs.tag != ''
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = if ("${{ inputs.tag }}" -ne "") { "${{ inputs.tag }}" } else { "${{ github.event.release.tag_name }}" }
+          gh release upload $tag `
+            "enclave-desktop-windows-x86_64.zip" "SHA256-windows.txt" `
+            --repo ${{ github.repository }} --clobber

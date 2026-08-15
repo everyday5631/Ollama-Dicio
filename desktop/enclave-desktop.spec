@@ -9,7 +9,7 @@ lets the user switch models without a rebuild.
 block_cipher = None
 
 a = Analysis(
-    ["dicio_desktop/__main__.py"],
+    ["main.py"],
     pathex=["."],
     binaries=[],
     datas=[],
@@ -32,7 +32,7 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name="dicio-desktop",
+    name="enclave-desktop",
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -48,5 +48,5 @@ coll = COLLECT(
     strip=False,
     upx=True,
     upx_exclude=[],
-    name="dicio-desktop",
+    name="enclave-desktop",
 )

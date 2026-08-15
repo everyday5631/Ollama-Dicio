@@ -150,7 +150,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self) -> None:
         super().__init__()
-        self.setWindowTitle("Dicio Desktop")
+        self.setWindowTitle("Enclave Desktop")
         self.resize(720, 560)
 
         self.settings = Settings.load()
@@ -316,7 +316,7 @@ class MainWindow(QMainWindow):
         if not self._streaming:
             self._streaming = True
             self.transcript.moveCursor(QTextCursor.End)
-            self.transcript.insertPlainText("Dicio: ")
+            self.transcript.insertPlainText("Enclave: ")
         self.transcript.moveCursor(QTextCursor.End)
         self.transcript.insertPlainText(piece)
 
@@ -324,7 +324,7 @@ class MainWindow(QMainWindow):
         if self._streaming:
             self.transcript.insertPlainText("\n")
         else:
-            self._append("Dicio", answer)
+            self._append("Enclave", answer)
         self._streaming = False
         self.status.setText(f"Ready (used {tool_name})" if tool_name else "Ready")
 
@@ -340,7 +340,7 @@ class MainWindow(QMainWindow):
         if dialog.exec() == QDialog.Accepted and dialog.apply_to(self.settings):
             QMessageBox.information(
                 self, "Model changed",
-                "The new model will be downloaded and loaded when you restart Dicio.",
+                "The new model will be downloaded and loaded when you restart Enclave.",
             )
 
     def closeEvent(self, event) -> None:
@@ -374,7 +374,7 @@ class MainWindow(QMainWindow):
 def run() -> int:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
     app = QApplication.instance() or QApplication([])
-    app.setApplicationName("Dicio Desktop")
+    app.setApplicationName("Enclave Desktop")
     window = MainWindow()
     window.show()
     return app.exec()

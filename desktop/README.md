@@ -1,4 +1,4 @@
-# Dicio Desktop
+# Enclave Desktop
 
 A **fully offline** voice assistant for **Linux and Windows**, sharing the design — and
 the models — of the Android app in this repository.
@@ -29,7 +29,7 @@ cd desktop
 python -m venv .venv
 . .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-python -m dicio_desktop
+python -m enclave_desktop
 ```
 
 Requires Python 3.10+. On first launch it downloads a Vosk speech model (~40 MB) and a
@@ -65,7 +65,7 @@ For a language other than English, point the Vosk model URL at another model fro
 ## Layout
 
 ```
-dicio_desktop/
+enclave_desktop/
   core/
     ollama_registry.py   resolve `tinydolphin` -> a GGUF blob URL
     model_store.py       resumable downloads, unpacking, data dir
@@ -123,10 +123,10 @@ sandbox. Anything needing a microphone or a loaded model is out of scope for the
 
 ```bash
 pip install pyinstaller
-pyinstaller dicio-desktop.spec
+pyinstaller enclave-desktop.spec
 ```
 
-Produces `dist/dicio-desktop/` — an `.exe` on Windows, a directory you can wrap in an
+Produces `dist/enclave-desktop/` — an `.exe` on Windows, a directory you can wrap in an
 AppImage on Linux. Models are **not** bundled; they download on first run, which keeps
 the artifact around 80 MB instead of half a gigabyte.
 
