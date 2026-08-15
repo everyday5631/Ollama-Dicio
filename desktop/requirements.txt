@@ -1,0 +1,11 @@
+# GUI
+PySide6>=6.6
+
+# Speech to text (offline)
+vosk>=0.3.45
+sounddevice>=0.4.6
+numpy>=1.24
+
+# Local LLM (offline). Ships prebuilt wheels for common platforms; falls back to
+# compiling llama.cpp from source, which needs a C++ toolchain and CMake.
+llama-cpp-python>=0.3.0
