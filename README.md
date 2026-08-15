@@ -58,14 +58,6 @@ Dicio's code is **not only here**! The repository with the *compiler for sentenc
 
 When contributing keep in mind that other people may have **needs** and **views different** than yours, so please *respect* them. For any question feel free to contact the project team at [@Stypox](https://github.com/Stypox).
 
-### Matrix room for communication
-
-The **#dicio** channel on *Matrix* is available to get in touch with the developers: [#dicio:matrix.org](https://matrix.to/#/#dicio:matrix.org). Some convenient Matrix clients, available both for phone and desktop, are listed at that link.
-
-### Translating
-
-If you want to translate Dicio to a new language, follow the **steps** listed in the documentation: https://dicio.stypox.org/translating.html
-
 ### Adding skills
 
 If you want to add a new skill, or improve an existing one, check out the guide in the documentation: https://dicio.stypox.org/adding_skill.html
