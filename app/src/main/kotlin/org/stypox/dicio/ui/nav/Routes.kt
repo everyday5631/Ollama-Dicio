@@ -26,9 +26,12 @@ object EnclaveSkills
 @Serializable
 object PrivacyControls
 
-/** Enclave screen 1a: the voice hero. */
+/**
+ * The classic interaction log with its graphical skill outputs, reached from the voice screen's
+ * History button. It is no longer the start destination, but nothing it could do was removed.
+ */
 @Serializable
-object Voice
+object History
 
 /** Enclave screen 1d: the privacy-promise onboarding slide. */
 @Serializable

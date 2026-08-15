@@ -7,6 +7,8 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -56,6 +58,8 @@ fun VoiceScreen(
     partialTranscript: String,
     onMicClick: () -> Unit,
     modifier: Modifier = Modifier,
+    lastAnswer: String? = null,
+    thinking: Boolean = false,
     onKeyboardClick: () -> Unit = {},
     onHistoryClick: () -> Unit = {},
 ) {
@@ -86,7 +90,11 @@ fun VoiceScreen(
         Spacer(Modifier.height(28.dp))
 
         Text(
-            if (listening) "Listening…" else "Tap to speak",
+            when {
+                listening -> "Listening…"
+                thinking -> "Thinking…"
+                else -> "Tap to speak"
+            },
             style = MaterialTheme.typography.headlineSmall,
             color = EnclaveTokens.Text,
         )
@@ -100,14 +108,27 @@ fun VoiceScreen(
 
         Spacer(Modifier.height(18.dp))
 
-        // the live transcript keeps its slot whether or not there is text, so the orb and the
-        // buttons do not jump around as words arrive
-        Box(Modifier.fillMaxWidth().height(48.dp), contentAlignment = Alignment.Center) {
-            if (partialTranscript.isNotBlank()) {
-                Text(
+        // One slot, fixed height, so the orb and the buttons do not jump as words arrive.
+        // While talking it shows the live transcript; once the utterance ends it shows the
+        // assistant's answer.
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .height(96.dp)
+                .verticalScroll(rememberScrollState()),
+            contentAlignment = Alignment.Center,
+        ) {
+            when {
+                partialTranscript.isNotBlank() -> Text(
                     partialTranscript,
                     style = MaterialTheme.typography.bodyLarge,
                     color = EnclaveTokens.TextMuted,
+                    textAlign = TextAlign.Center,
+                )
+                lastAnswer != null -> Text(
+                    lastAnswer,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = EnclaveTokens.Text,
                     textAlign = TextAlign.Center,
                 )
             }
@@ -265,6 +286,19 @@ private fun CircleIconButton(
 private fun VoiceScreenIdlePreview() {
     AppTheme(theme = SettingsTheme.THEME_DARK) {
         VoiceScreen(listening = false, partialTranscript = "", onMicClick = {})
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF0F0A1E, heightDp = 700)
+@Composable
+private fun VoiceScreenAnsweredPreview() {
+    AppTheme(theme = SettingsTheme.THEME_DARK) {
+        VoiceScreen(
+            listening = false,
+            partialTranscript = "",
+            lastAnswer = "It is 23 degrees and clear in Berlin right now.",
+            onMicClick = {},
+        )
     }
 }
 

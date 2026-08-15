@@ -19,10 +19,10 @@ class RememberTool(
     private val knowledgeStore: KnowledgeStore,
 ) : LlmTool {
     override val definition = LlmToolDef(
-        name = "remember",
-        description = "Save a durable fact or preference the user told you about themselves " +
-            "(e.g. their name, home city, likes/dislikes, routines) so you can recall it later. " +
-            "Only save lasting facts about the user, not one-off requests.",
+        name = NAME,
+        description = "Save something the user has just explicitly asked you to remember. " +
+            "Only call this when the user actually asked -- e.g. \"remember that...\", " +
+            "\"don't forget...\". Never call it for something they merely mentioned.",
         params = listOf(
             LlmToolParam(
                 name = "fact",
@@ -36,10 +36,19 @@ class RememberTool(
     override suspend fun execute(ctx: SkillContext, args: Map<String, String>): SkillOutput {
         val fact = args["fact"]?.trim().orEmpty()
         if (fact.isBlank()) {
-            return LlmAnswerOutput("")
+            return LlmAnswerOutput("I didn't catch what I should remember.")
         }
         val isNew = knowledgeStore.remember(fact)
-        // Speak a short confirmation. Kept generic/localizable-friendly and unobtrusive.
-        return LlmAnswerOutput(if (isNew) "Okay, I'll remember that." else "")
+        // Echo the fact back. A bare "Okay" leaves the user unsure what was stored, and an empty
+        // string leaves them with no answer at all -- this tool call *is* the turn's reply, so it
+        // must always say something.
+        return LlmAnswerOutput(
+            if (isNew) "Got it — I'll remember: $fact" else "I already knew that: $fact"
+        )
+    }
+
+    companion object {
+        /** The tool's name, so the orchestrator can hide it without repeating the string. */
+        const val NAME = "remember"
     }
 }
