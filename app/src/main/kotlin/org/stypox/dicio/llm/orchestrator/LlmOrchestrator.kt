@@ -12,6 +12,8 @@ import org.stypox.dicio.llm.LlmEngine
 import org.stypox.dicio.llm.LlmEvent
 import org.stypox.dicio.llm.LlmMessage
 import org.stypox.dicio.llm.LlmModelState
+import org.stypox.dicio.llm.MemoryIntent
+import org.stypox.dicio.llm.orchestrator.tools.RememberTool
 import org.stypox.dicio.llm.LlmRole
 
 /**
@@ -68,14 +70,23 @@ class LlmOrchestrator(
         }
 
         val learningEnabled = dataStore.data.first().llmLearningEnabled
-        val messages = buildMessages(userInput, history, learningEnabled)
+        // The `remember` tool is offered only when the user actually asked to be remembered.
+        // Left always-on, a small model calls it on most turns -- and because a tool call becomes
+        // the turn's reply, that both fills the memory file with noise and swallows the answer.
+        val rememberRequested = learningEnabled && MemoryIntent.isRememberRequest(userInput)
+        val messages = buildMessages(userInput, history, learningEnabled, rememberRequested)
+        val tools = if (rememberRequested) {
+            toolRegistry.definitions
+        } else {
+            toolRegistry.definitionsExcluding(setOf(RememberTool.NAME))
+        }
 
         return try {
             var toolCall: org.stypox.dicio.llm.LlmToolCall? = null
             var answer = ""
             var error: Throwable? = null
 
-            engine.generate(messages, toolRegistry.definitions).collect { event ->
+            engine.generate(messages, tools).collect { event ->
                 when (event) {
                     is LlmEvent.Token -> { /* accumulated below via Done */ }
                     is LlmEvent.ToolCall -> toolCall = event.call
@@ -117,11 +128,16 @@ class LlmOrchestrator(
         userInput: String,
         history: List<LlmMessage>,
         learningEnabled: Boolean,
+        rememberRequested: Boolean,
     ): List<LlmMessage> {
         val sb = StringBuilder()
         sb.append(SYSTEM_PERSONA)
         if (learningEnabled) {
-            sb.append("\n\n").append(LEARNING_INSTRUCTION)
+            // Only ask for a save on the turn the user requested one. Otherwise the memory is
+            // read-only context: the model may use what it knows, but must not add to it.
+            sb.append("\n\n").append(
+                if (rememberRequested) SAVE_INSTRUCTION else RECALL_INSTRUCTION
+            )
             val knowledge = knowledgeStore.promptContext()
             if (knowledge.isNotBlank()) {
                 sb.append("\n\n").append(knowledge)
@@ -150,9 +166,16 @@ class LlmOrchestrator(
                 "Answer concisely and in the same language the user speaks. When a tool can " +
                 "fulfil the request, call it instead of guessing."
 
-        private const val LEARNING_INSTRUCTION =
-            "You learn about the user over time. Whenever the user tells you a durable fact or " +
-                "preference about themselves, call the 'remember' tool to save it. Use what you " +
-                "already know (below) to personalise your answers."
+        /** Used on ordinary turns: the memory is context to read, never to write. */
+        private const val RECALL_INSTRUCTION =
+            "Below is what you already know about the user. Use it to personalise your answers " +
+                "when it is relevant. Do not mention the list itself unless asked, and do not " +
+                "try to add anything to it."
+
+        /** Used only when the user explicitly asked to be remembered. */
+        private const val SAVE_INSTRUCTION =
+            "The user has just asked you to remember something. Call the 'remember' tool once, " +
+                "with the fact phrased as a short standalone statement. Below is what you " +
+                "already know about them."
     }
 }

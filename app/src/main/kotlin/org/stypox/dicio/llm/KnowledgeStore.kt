@@ -96,6 +96,26 @@ class KnowledgeStore(appContext: Context) {
         return true
     }
 
+    /**
+     * Replaces the whole file with [markdown], as edited by the user in settings.
+     *
+     * The text is capped the same way an appended fact is, so hand-editing cannot grow the prompt
+     * without bound. Whatever the user writes is authoritative: no attempt is made to reformat it,
+     * because [promptContext] only reads lines starting with "- " and ignores the rest, so free
+     * prose in the file is harmless.
+     */
+    suspend fun replaceAll(markdown: String) = mutex.withLock {
+        val capped = capToLimit(markdown)
+        _content.value = capped
+        withContext(Dispatchers.IO) {
+            try {
+                markdownFile.writeText(capped)
+            } catch (e: Exception) {
+                Log.e(TAG, "Could not write edited knowledge file", e)
+            }
+        }
+    }
+
     /** Clears all learned knowledge (offered to the user in settings). */
     suspend fun clear() = mutex.withLock {
         _content.value = defaultHeader()
@@ -125,11 +145,12 @@ class KnowledgeStore(appContext: Context) {
     }
 
     private fun defaultHeader(): String = """
-        # What Dicio has learned about you
+        # What Enclave has learned about you
 
         This file is your assistant's offline memory. Everything here stays on your device.
-        The assistant reads it before answering and adds to it when it learns something about you.
-        You can edit or clear it any time.
+        Enclave reads it before answering, and only adds to it when you explicitly ask it to
+        remember something. Lines starting with "- " are the facts it uses; anything else here is
+        just notes for you. Edit or clear it any time.
 
     """.trimIndent() + "\n"
 

@@ -46,7 +46,12 @@ class GgufModelManager(
      * Recomputes the model state from what is on disk, for the given [modelUrl]. Called when the
      * feature is enabled or the configured model changes.
      */
+    /** The model reference last passed to [refresh]/[ensureReady], for picking the prompt style. */
+    @Volatile
+    private var currentModel: String = defaultModelUrl
+
     fun refresh(enabled: Boolean, modelUrl: String) {
+        currentModel = modelUrl
         if (!enabled) {
             _state.value = LlmModelState.Disabled
             return
@@ -68,6 +73,7 @@ class GgufModelManager(
      * into the engine. Safe to call repeatedly; concurrent calls are coalesced.
      */
     fun ensureReady(modelUrl: String) {
+        currentModel = modelUrl
         if (currentJob?.isActive == true) return
         currentJob = scope.launch {
             try {
@@ -128,6 +134,9 @@ class GgufModelManager(
     private suspend fun load() {
         _state.value = LlmModelState.Loading
         try {
+            // the file on disk is always llm-model.gguf, so the format has to come from the
+            // configured reference rather than from the file itself
+            engine.promptStyle = PromptStyle.forModel(currentModel)
             engine.ensureLoaded(modelPath)
             _state.value = LlmModelState.Ready
         } catch (t: Throwable) {
@@ -166,14 +175,16 @@ class GgufModelManager(
         private const val MODEL_URL_MARKER = "llm-model-url"
 
         /**
-         * Default model, as an [OllamaRegistry] reference. Qwen2.5-0.5B-Instruct is multilingual
-         * (good German), follows the tool convention better than TinyDolphin, and is the smaller
-         * download of the two (~380 MB against ~610 MB).
+         * Default model, as an [OllamaRegistry] reference. Gemma 3 270M is the smallest of the
+         * options at ~290 MB, which matters on a phone.
+         *
+         * It expects the **Gemma** turn format, not ChatML — see [PromptStyle], which [load]
+         * configures from this reference before the model is loaded.
          *
          * Settings accepts any Ollama reference here — `tinydolphin` for that model specifically,
          * or `qwen2.5:1.5b` for better quality — as well as a plain `https://` URL of a GGUF file,
          * which is downloaded directly without touching the registry.
          */
-        const val defaultModelUrl = "qwen2.5:0.5b"
+        const val defaultModelUrl = "gemma3:270m"
     }
 }

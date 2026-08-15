@@ -159,17 +159,56 @@ fun LocalAiSettingsScreen(
                 }
             }
 
-            // --- learned memory viewer ---
+            // --- learned memory: viewer and editor ---
             Card(Modifier.fillMaxWidth()) {
                 Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text("What the assistant has learned",
                         style = MaterialTheme.typography.titleMedium)
                     Text(
-                        memory.ifBlank { "Nothing learned yet." },
+                        "Enclave only adds to this when you ask it to remember something. " +
+                            "Lines starting with \"- \" are the facts it uses.",
                         style = MaterialTheme.typography.bodySmall,
-                        overflow = TextOverflow.Ellipsis,
                     )
-                    OutlinedButton(onClick = viewModel::clearMemory) { Text("Clear memory") }
+
+                    // Editing is held locally and committed on Save, so a keystroke does not
+                    // rewrite the file (and does not fight the flow that feeds `memory` back in).
+                    var draft by rememberSaveable(memory) { mutableStateOf(memory) }
+                    var editing by rememberSaveable { mutableStateOf(false) }
+
+                    if (editing) {
+                        OutlinedTextField(
+                            value = draft,
+                            onValueChange = { draft = it },
+                            label = { Text("assistant-memory.md") },
+                            minLines = 6,
+                            maxLines = 16,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Button(onClick = {
+                                viewModel.saveMemory(draft)
+                                editing = false
+                            }) { Text("Save") }
+                            OutlinedButton(onClick = {
+                                draft = memory
+                                editing = false
+                            }) { Text("Cancel") }
+                        }
+                    } else {
+                        Text(
+                            memory.ifBlank { "Nothing learned yet." },
+                            style = MaterialTheme.typography.bodySmall,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            OutlinedButton(onClick = { draft = memory; editing = true }) {
+                                Text("Edit")
+                            }
+                            OutlinedButton(onClick = viewModel::clearMemory) {
+                                Text("Clear memory")
+                            }
+                        }
+                    }
                 }
             }
 

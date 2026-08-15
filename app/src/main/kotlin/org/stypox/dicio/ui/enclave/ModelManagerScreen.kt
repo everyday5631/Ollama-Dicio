@@ -300,7 +300,8 @@ data class ModelEntry(
  * against `registry.ollama.ai`.
  */
 val ModelCatalogue = listOf(
-    ModelEntry("qwen2.5:0.5b", "Default · 380 MB · ChatML · multilingual", isDefault = true),
+    ModelEntry("gemma3:270m", "Default · 290 MB · Gemma format · smallest", isDefault = true),
+    ModelEntry("qwen2.5:0.5b", "380 MB · ChatML · multilingual, good tool use"),
     ModelEntry("tinydolphin", "1.1B · 610 MB · English-centric, fast"),
     ModelEntry("qwen2.5:1.5b", "Best quality · 1.0 GB · needs more RAM"),
 )

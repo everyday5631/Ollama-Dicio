@@ -29,7 +29,7 @@ import org.stypox.dicio.ui.enclave.PrivacyScreen
 import org.stypox.dicio.ui.enclave.PrivacyState
 import org.stypox.dicio.ui.enclave.SkillsScreen
 import org.stypox.dicio.ui.enclave.defaultSkillRows
-import org.stypox.dicio.ui.enclave.VoiceScreen
+import org.stypox.dicio.ui.enclave.VoiceRoute
 import org.stypox.dicio.settings.MainSettingsScreen
 import org.stypox.dicio.settings.SkillSettingsScreen
 import org.stypox.dicio.ui.about.AboutScreen
@@ -51,6 +51,16 @@ fun Navigation() {
 
     NavHost(navController = navController, startDestination = Home) {
         composable<Home> {
+            // Screen 1a is the hero the design calls for. The classic interaction log, with the
+            // graphical skill outputs the orb screen has no room for, is one tap away behind the
+            // History button rather than removed.
+            VoiceRoute(
+                onHistoryClick = { navController.navigate(History) },
+                onKeyboardClick = { navController.navigate(History) },
+            )
+        }
+
+        composable<History> {
             val context = LocalContext.current
             ScreenWithDrawer(
                 onSettingsClick = { navController.navigate(MainSettings) },
@@ -107,14 +117,6 @@ fun Navigation() {
                 onChange = { privacy = it },
                 onClearAllData = {},
                 navigationIcon = backIcon,
-            )
-        }
-
-        composable<Voice> {
-            VoiceScreen(
-                listening = false,
-                partialTranscript = "",
-                onMicClick = {},
             )
         }
 

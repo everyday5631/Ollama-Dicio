@@ -86,6 +86,11 @@ class LocalAiViewModel @Inject constructor(
         viewModelScope.launch { knowledgeStore.clear() }
     }
 
+    /** Saves the memory file as the user edited it in settings. */
+    fun saveMemory(markdown: String) {
+        viewModelScope.launch { knowledgeStore.replaceAll(markdown) }
+    }
+
     /** Imports fitness/health data from a picked file (ZIP export or GPX). */
     fun importHealth(uri: Uri) {
         viewModelScope.launch {

@@ -39,6 +39,14 @@ class LlamaCppEngine : LlmEngine {
     /** Absolute path of the currently loaded model, to make [ensureLoaded] idempotent. */
     private var loadedPath: String? = null
 
+    /**
+     * The turn format the loaded model expects. Set by [GgufModelManager] from the configured model
+     * reference before loading, because the file on disk is always called `llm-model.gguf` and so
+     * says nothing about which family it came from.
+     */
+    @Volatile
+    override var promptStyle: PromptStyle = PromptStyle.CHAT_ML
+
     override suspend fun ensureLoaded(modelPath: String) {
         if (!nativeAvailable) {
             _state.value = LlmEngineState.Error(
@@ -97,7 +105,7 @@ class LlamaCppEngine : LlmEngine {
                 return@callbackFlow
             }
 
-            val prompt = ChatFormat.build(messages, tools)
+            val prompt = ChatFormat.build(messages, tools, promptStyle)
             val accumulated = StringBuilder()
             var finished = false
 

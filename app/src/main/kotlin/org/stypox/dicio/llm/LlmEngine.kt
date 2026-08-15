@@ -31,6 +31,16 @@ sealed interface LlmEngineState {
  * required to be supported (and [LlamaCppEngine] serializes them onto a single thread).
  */
 interface LlmEngine {
+
+    /**
+     * The turn format the currently configured model expects; see [PromptStyle].
+     *
+     * Settable because the model can be swapped at runtime, and the format has to follow it.
+     */
+    var promptStyle: PromptStyle
+        get() = PromptStyle.CHAT_ML
+        set(_) { /* engines that render their own prompt can ignore this */ }
+
     val state: StateFlow<LlmEngineState>
 
     /**
