@@ -76,7 +76,7 @@ class WakeService : Service() {
 
         scope.launch {
             // Recreate the notification so that it says the correct thing (i.e. there is a
-            // different string for the "Hey Dicio" wake word and for a custom one).
+            // different string for the "Hey Enclave" wake word and for a custom one).
             // Ignore the first one (i.e. the current value), which is handled in onStartCommand.
             wakeDevice.isHeyDicio.drop(1).collect { isHeyDicio ->
                 createForegroundNotification(isHeyDicio)

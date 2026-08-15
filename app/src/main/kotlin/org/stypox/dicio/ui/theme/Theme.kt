@@ -58,7 +58,44 @@ private val lightScheme = lightColorScheme(
     surfaceContainerHighest = surfaceContainerHighestLight,
 )
 
+/**
+ * The Enclave dark scheme. The brand tokens in [EnclaveTokens] are mapped onto the Material slots
+ * here so that ordinary Material 3 components — buttons, cards, switches, text fields — pick the
+ * brand up without every screen having to reach for the tokens directly.
+ *
+ * Only the dark scheme is rebranded: the design handoff targets dark only and puts a light theme
+ * explicitly out of scope, so [lightScheme] is left as the original Dicio palette.
+ */
 private val darkScheme = darkColorScheme(
+    primary = EnclaveTokens.Accent,
+    onPrimary = Color.White,
+    primaryContainer = EnclaveTokens.AccentDeep,
+    onPrimaryContainer = EnclaveTokens.Text,
+    secondary = EnclaveTokens.Accent2,
+    onSecondary = Color.White,
+    secondaryContainer = EnclaveTokens.SurfaceVariant,
+    onSecondaryContainer = EnclaveTokens.Text,
+    tertiary = EnclaveTokens.Ok,
+    onTertiary = Color(0xFF00301C),
+    error = EnclaveTokens.Danger,
+    onError = Color(0xFF3A0714),
+    background = EnclaveTokens.Bg,
+    onBackground = EnclaveTokens.Text,
+    surface = EnclaveTokens.Bg,
+    onSurface = EnclaveTokens.Text,
+    surfaceVariant = EnclaveTokens.SurfaceVariant,
+    onSurfaceVariant = EnclaveTokens.TextMuted,
+    outline = EnclaveTokens.TextDim,
+    outlineVariant = EnclaveTokens.Line,
+    surfaceContainerLowest = EnclaveTokens.Bg,
+    surfaceContainerLow = EnclaveTokens.Bg2,
+    surfaceContainer = EnclaveTokens.Surface,
+    surfaceContainerHigh = EnclaveTokens.SurfaceVariant,
+    surfaceContainerHighest = EnclaveTokens.SurfaceVariant,
+)
+
+/** The upstream Dicio dark palette, kept for reference and for the high-contrast variants. */
+private val dicioDarkScheme = darkColorScheme(
     primary = primaryDark,
     onPrimary = onPrimaryDark,
     primaryContainer = primaryContainerDark,

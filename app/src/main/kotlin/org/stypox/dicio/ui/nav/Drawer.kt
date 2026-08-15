@@ -118,7 +118,7 @@ private fun DrawerHeader(modifier: Modifier = Modifier) {
             }
 
             Icon(
-                painter = painterResource(id = R.mipmap.ic_launcher_foreground),
+                painter = painterResource(id = R.drawable.ic_enclave_monochrome),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier

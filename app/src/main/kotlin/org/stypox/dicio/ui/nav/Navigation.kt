@@ -9,7 +9,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.NavHost
@@ -19,6 +23,13 @@ import kotlinx.coroutines.launch
 import org.stypox.dicio.R
 import org.stypox.dicio.io.input.stt_popup.SttPopupActivity
 import org.stypox.dicio.settings.LocalAiSettingsScreen
+import org.stypox.dicio.ui.enclave.ModelManagerScreen
+import org.stypox.dicio.ui.enclave.OnboardingScreen
+import org.stypox.dicio.ui.enclave.PrivacyScreen
+import org.stypox.dicio.ui.enclave.PrivacyState
+import org.stypox.dicio.ui.enclave.SkillsScreen
+import org.stypox.dicio.ui.enclave.defaultSkillRows
+import org.stypox.dicio.ui.enclave.VoiceScreen
 import org.stypox.dicio.settings.MainSettingsScreen
 import org.stypox.dicio.settings.SkillSettingsScreen
 import org.stypox.dicio.ui.about.AboutScreen
@@ -58,6 +69,8 @@ fun Navigation() {
                 navigationIcon = backIcon,
                 navigateToSkillSettings = { navController.navigate(SkillSettings) },
                 navigateToLocalAiSettings = { navController.navigate(LocalAiSettings) },
+                navigateToModelManager = { navController.navigate(ModelManager) },
+                navigateToPrivacyControls = { navController.navigate(PrivacyControls) },
             )
         }
 
@@ -67,6 +80,49 @@ fun Navigation() {
 
         composable<LocalAiSettings> {
             LocalAiSettingsScreen(navigationIcon = backIcon)
+        }
+
+        // ----- Enclave redesign (design_handoff_enclave_assistant) -----
+
+        composable<ModelManager> {
+            ModelManagerScreen(navigationIcon = backIcon)
+        }
+
+        composable<EnclaveSkills> {
+            // TODO wire to the real per-skill settings once SkillSettingsViewModel exposes
+            //  an enabled flag per skill id; the rows below mirror the repo README's skill set
+            SkillsScreen(
+                skills = defaultSkillRows(),
+                onToggle = { _, _ -> },
+                navigationIcon = backIcon,
+            )
+        }
+
+        composable<PrivacyControls> {
+            // held in nav-entry scope for now; persisting these to the settings store is
+            // the follow-up noted in docs/enclave-design.md
+            var privacy by remember { mutableStateOf(PrivacyState()) }
+            PrivacyScreen(
+                state = privacy,
+                onChange = { privacy = it },
+                onClearAllData = {},
+                navigationIcon = backIcon,
+            )
+        }
+
+        composable<Voice> {
+            VoiceScreen(
+                listening = false,
+                partialTranscript = "",
+                onMicClick = {},
+            )
+        }
+
+        composable<Onboarding> {
+            OnboardingScreen(
+                onGetStarted = { navController.popBackStack() },
+                onReadPrivacyPromise = {},
+            )
         }
 
         composable<About> {

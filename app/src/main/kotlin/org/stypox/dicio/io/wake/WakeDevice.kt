@@ -32,7 +32,7 @@ interface WakeDevice {
     fun isOccupyingResources(): Boolean
 
     /**
-     * Returns `true` if the wake word is "Hey Dicio", `false` if a custom model is being used
+     * Returns `true` if the wake word is "Hey Enclave", `false` if a custom model is being used
      */
     fun isHeyDicio(): Boolean
 }

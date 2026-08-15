@@ -23,13 +23,13 @@
     <string name="pref_io">Mètodes d\'entrada i sortida</string>
     <string name="pref_appearance">Aparença</string>
     <string name="pref_theme_summary">Trieu el conjunt de colers de l\'aplicació</string>
-    <string name="pref_language_summary">En quina llengua el Dicio ha d\'escoltar-vos i proporcionar-vos respostes\?</string>
+    <string name="pref_language_summary">En quina llengua el Enclave ha d\'escoltar-vos i proporcionar-vos respostes\?</string>
     <string name="pref_input_method">Mètode d\'entrada</string>
-    <string name="pref_input_method_summary">Trieu el servei que usareu per a parlar al Dicio</string>
+    <string name="pref_input_method_summary">Trieu el servei que usareu per a parlar al Enclave</string>
     <string name="pref_input_method_text">Quadre de text</string>
     <string name="pref_input_method_vosk">Reconeixement de la parla fora de línia Vosk</string>
     <string name="pref_speech_output_method">Mètode de sortida de veu</string>
-    <string name="pref_speech_output_method_summary">Trieu el servei que el Dicio ha d\'usar per a parlar-vos</string>
+    <string name="pref_speech_output_method_summary">Trieu el servei que el Enclave ha d\'usar per a parlar-vos</string>
     <string name="pref_speech_output_method_android">Motor de síntesi de veu d\'Android</string>
     <string name="pref_speech_output_method_toast">Toast (missatge emergent)</string>
     <string name="pref_speech_output_method_snackbar">Snackbar (missatge en la part inferior)</string>
@@ -38,7 +38,7 @@
     <string name="skill_name_lyrics">Lletres de cançons</string>
     <string name="eval_fatal_error">No s\'ha pogut avaluar la petició</string>
     <string name="eval_network_error">Error de xarxa</string>
-    <string name="eval_network_error_description">El Dicio no pot accedir a Internet. Comproveu la connexió i torneu a intentar-ho.</string>
+    <string name="eval_network_error_description">El Enclave no pot accedir a Internet. Comproveu la connexió i torneu a intentar-ho.</string>
     <string name="eval_no_match">No us he entès, podeu repetir-ho?</string>
     <string name="drawer_close">Tanca el tauler de navegació</string>
     <string name="action_text_input">Entrada de text</string>
@@ -111,7 +111,7 @@
     <string name="skill_timer_no_active_name">No hi ha cap temporitzador actiu anomenat %1$s</string>
     <string name="skill_timer_query">El temporitzador caduca en %1$s</string>
     <string name="skill_timer_none_canceled">D\'acord, no s\'ha cancel·lat cap temporitzador</string>
-    <string name="error_report_notification_title">Dicio ha trobat un error, toca per a informar</string>
+    <string name="error_report_notification_title">Enclave ha trobat un error, toca per a informar</string>
     <string name="error_report_notification_toast">S\'ha produït un error, vegeu la notificació</string>
     <string name="android_tts_error">S\'ha produït un error en inicialitzar el motor de text a veu d\'Android</string>
     <string name="pref_skill_missing_permissions">Requereix aquests permisos: %1$s</string>
@@ -159,5 +159,5 @@
     <string name="start_listening">Començar a escoltar</string>
     <string name="downloaded">Descarregant</string>
     <string name="loaded">Carregant</string>
-    <string name="all_skills_disabled_description">Siusplau activi algunes funcions dels ajustaments, d\'altra banda, Dicio no sera capaç de realizar ninguna acció</string>
+    <string name="all_skills_disabled_description">Siusplau activi algunes funcions dels ajustaments, d\'altra banda, Enclave no sera capaç de realizar ninguna acció</string>
 </resources>

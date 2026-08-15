@@ -14,5 +14,25 @@ object SkillSettings
 @Serializable
 object LocalAiSettings
 
+/** Enclave screen 1f: the redesigned on-device model manager. */
+@Serializable
+object ModelManager
+
+/** Enclave screen 1e: skills and plugins, split by internet need. */
+@Serializable
+object EnclaveSkills
+
+/** Enclave screen 1g: privacy and data controls. */
+@Serializable
+object PrivacyControls
+
+/** Enclave screen 1a: the voice hero. */
+@Serializable
+object Voice
+
+/** Enclave screen 1d: the privacy-promise onboarding slide. */
+@Serializable
+object Onboarding
+
 @Serializable
 object About

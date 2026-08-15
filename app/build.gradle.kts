@@ -31,9 +31,10 @@ android {
 
     defaultConfig {
         // Rebranded application identity: the installed APK / Play Store package is
-        // "lol.everyday5631.nova" (the Nova fork), independent of the internal source
+        // "lol.everyday5631.nova" (the Enclave fork), independent of the internal source
         // package (`namespace` below stays org.stypox.dicio so the Kotlin sources and
-        // generated R/BuildConfig classes do not need to move).
+        // generated R/BuildConfig classes do not need to move). The product name is
+        // Enclave; the package id is kept for install continuity.
         applicationId = "lol.everyday5631.nova"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
@@ -82,7 +83,7 @@ android {
                 ?.contains("creenshot") == true
             if (!isScreenshotTest) {
                 // only change the app name if we are not taking screenshots
-                resValue("string", "app_name", "Dicio-${gitBranch()}")
+                resValue("string", "app_name", "Enclave-${gitBranch()}")
             }
         }
         release {
