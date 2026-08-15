@@ -70,7 +70,9 @@ class LlamaCppEngine : LlmEngine {
                     nativeBackendInit()
                     backendInitialized = true
                 }
-                val threads = Runtime.getRuntime().availableProcessors().coerceIn(2, 6)
+                // performance cores only: a little core does not add throughput here, it just
+                // holds the others up at every layer boundary (see CpuTopology)
+                val threads = CpuTopology.inferenceThreads
                 val h = nativeLoadModel(modelPath, N_CTX, threads, N_GPU_LAYERS)
                 if (h == 0L) {
                     throw IllegalStateException("nativeLoadModel returned 0 for $modelPath")

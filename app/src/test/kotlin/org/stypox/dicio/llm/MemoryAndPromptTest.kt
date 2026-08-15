@@ -114,3 +114,37 @@ class ChatFormatTest : StringSpec({
         prompt shouldContain "Result of current_time: It is 5pm."
     }
 })
+
+class CpuTopologyTest : StringSpec({
+
+    // peak clocks in kHz, as /sys/devices/system/cpu/cpuN/cpufreq/cpuinfo_max_freq reports them
+    val tensorG4 = listOf(3100000L) + List(3) { 2600000L } + List(4) { 1920000L }
+    val snapdragon8Elite = List(2) { 4320000L } + List(6) { 3530000L }
+    val snapdragon888 = listOf(2840000L) + List(3) { 2420000L } + List(4) { 1800000L }
+
+    "a Tensor G4 uses its four fast cores, not all eight" {
+        // the A520 efficiency cores would gate every layer boundary
+        CpuTopology.selectThreadCount(tensorG4, 8) shouldBe 4
+    }
+
+    "an 8 Elite has no little cores, so it is capped by MAX_THREADS" {
+        CpuTopology.selectThreadCount(snapdragon8Elite, 8) shouldBe 6
+    }
+
+    "an older big.LITTLE part also drops its little cluster" {
+        CpuTopology.selectThreadCount(snapdragon888, 8) shouldBe 4
+    }
+
+    "a uniform CPU uses all of its cores" {
+        CpuTopology.selectThreadCount(List(4) { 1800000L }, 4) shouldBe 4
+    }
+
+    "unreadable cpufreq falls back to half the cores" {
+        CpuTopology.selectThreadCount(emptyList(), 8) shouldBe 4
+        CpuTopology.selectThreadCount(emptyList(), 2) shouldBe 2
+    }
+
+    "the result is never below the minimum" {
+        CpuTopology.selectThreadCount(listOf(1800000L), 1) shouldBe 2
+    }
+})
