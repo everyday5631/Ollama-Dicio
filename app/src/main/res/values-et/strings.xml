@@ -26,7 +26,7 @@
     <string name="pref_theme_dark">Tume kujundus</string>
     <string name="pref_theme_black">Süsimust kujundus</string>
     <string name="pref_language">Keel</string>
-    <string name="pref_language_summary">Mis keeles peaks Dicio sind kuulama ja sulle vastama?</string>
+    <string name="pref_language_summary">Mis keeles peaks Enclave sind kuulama ja sulle vastama?</string>
     <string name="pref_language_system">Kasuta süsteemi keelt</string>
     <string name="pref_input_method">Sisendmeetod</string>
     <string name="start_listening">Alusta kuulamist</string>
@@ -39,7 +39,7 @@
     <string name="listening">Kuulan sinu juttu…</string>
     <string name="waiting">Ootan…</string>
     <string name="all_skills_disabled_title">Ükski oskus pole kasutusel</string>
-    <string name="all_skills_disabled_description">Palun lülita seadistustest mõni oskus sisse. Vastasel juhul Dicio ei oska mitte midagi ette võtta</string>
+    <string name="all_skills_disabled_description">Palun lülita seadistustest mõni oskus sisse. Vastasel juhul Enclave ei oska mitte midagi ette võtta</string>
     <string name="action_text_input">Tekstisisend</string>
     <string name="action_voice_input">Häälsisend</string>
     <string name="skill_weather_celsius">°C</string>
@@ -127,7 +127,7 @@
     <string name="about_version_copy">Kopeeri versiooni teave</string>
     <string name="about_description">Mitmekeelne, kohalikus seadmes töötav ning vaba ja tasuta häälabiline</string>
     <string name="about_repository_title">Lähtekoodi hoidla</string>
-    <string name="about_repository_description">Dicio on vaba, tasuta ja avatud lähtekoodiga. Rakendus on litsentseeritud GPLv3 alusel</string>
+    <string name="about_repository_description">Enclave on vaba, tasuta ja avatud lähtekoodiga. Rakendus on litsentseeritud GPLv3 alusel</string>
     <string name="about_issues_title">Kas leidsid vea?</string>
     <string name="microphone_error">Pole võimalik mikrofoni kasutada - kas ta juba on kasutuses või puuduvad vastavad õigused.</string>
     <string name="vosk_model_unsupported_language">Praegusele keelele pole saadaval VOSK-mudelit</string>
@@ -138,7 +138,7 @@
     <string name="vosk_model_ready">VOSK-mudel on kasutusvalmis</string>
     <string name="android_tts_unsupported_language">Androidi kõnesünteesimootor ei toeta praegust keelt</string>
     <string name="android_tts_error">Androidi kõnesünteesimootori valmendamisel tekkis viga</string>
-    <string name="pref_input_method_summary">Vali Dicioga suhtlemiseks kasutatav teenus</string>
+    <string name="pref_input_method_summary">Vali Enclavega suhtlemiseks kasutatav teenus</string>
     <string name="pref_input_method_text">Vaid tekstikast</string>
     <string name="pref_input_method_vosk">VOSK-i vallasrežiimis häältuvastus</string>
 </resources>

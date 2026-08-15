@@ -13,6 +13,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DeleteSweep
 import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.Memory
+import androidx.compose.material.icons.filled.VerifiedUser
 import androidx.compose.material.icons.filled.Extension
 import androidx.compose.material.icons.filled.UploadFile
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -51,6 +53,8 @@ fun MainSettingsScreen(
     navigationIcon: @Composable () -> Unit,
     navigateToSkillSettings: () -> Unit,
     navigateToLocalAiSettings: () -> Unit = {},
+    navigateToModelManager: () -> Unit = {},
+    navigateToPrivacyControls: () -> Unit = {},
     viewModel: MainSettingsViewModel = hiltViewModel(),
 ) {
     Scaffold(
@@ -65,6 +69,8 @@ fun MainSettingsScreen(
         MainSettingsScreen(
             navigateToSkillSettings = navigateToSkillSettings,
             navigateToLocalAiSettings = navigateToLocalAiSettings,
+            navigateToModelManager = navigateToModelManager,
+            navigateToPrivacyControls = navigateToPrivacyControls,
             viewModel = viewModel,
             modifier = Modifier.padding(it),
         )
@@ -75,6 +81,8 @@ fun MainSettingsScreen(
 private fun MainSettingsScreen(
     navigateToSkillSettings: () -> Unit,
     navigateToLocalAiSettings: () -> Unit = {},
+    navigateToModelManager: () -> Unit = {},
+    navigateToPrivacyControls: () -> Unit = {},
     viewModel: MainSettingsViewModel,
     modifier: Modifier = Modifier,
 ) {
@@ -134,6 +142,26 @@ private fun MainSettingsScreen(
                     .testTag("local_ai_settings_item")
             )
         }
+        item {
+            SettingsItem(
+                title = "On-device model",
+                icon = Icons.Default.Memory,
+                description = "Pick and download the local language model",
+                modifier = Modifier
+                    .clickable(onClick = navigateToModelManager)
+                    .testTag("model_manager_item")
+            )
+        }
+        item {
+            SettingsItem(
+                title = "Privacy & data",
+                icon = Icons.Default.VerifiedUser,
+                description = "Offline mode, wake word, history and clearing your data",
+                modifier = Modifier
+                    .clickable(onClick = navigateToPrivacyControls)
+                    .testTag("privacy_controls_item")
+            )
+        }
 
         /* INPUT AND OUTPUT METHODS */
         item { SettingsCategoryTitle(stringResource(R.string.pref_io)) }
@@ -163,7 +191,7 @@ private fun MainSettingsScreen(
             item {
                 val isHeyDicio by viewModel.isHeyDicio.collectAsState(true)
                 if (isHeyDicio) {
-                    // the wake word is "Hey Dicio", so there is no custom model at the moment
+                    // the wake word is "Hey Enclave", so there is no custom model at the moment
                     SettingsItem(
                         modifier = Modifier.clickable { importLauncher.launch(arrayOf("*/*")) },
                         title = stringResource(R.string.pref_wake_custom_import),

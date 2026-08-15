@@ -70,5 +70,5 @@
     <string name="pref_language_system">Seqdec tutlayt n unagraw</string>
     <string name="skill_navigation_navigating_to">Tunigin ɣer %1$s</string>
     <string name="wake_word_setup_title">Swel awal n usermed</string>
-    <string name="wake_service_label">Tanfa n wawal n usermed n Dicio</string>
+    <string name="wake_service_label">Tanfa n wawal n usermed n Enclave</string>
 </resources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Flat white monochrome mark (prototype 2a "Flat / mono"). Used for Android 13+ themed
+    icons and as the notification glyph, where only the alpha channel is honoured, so the
+    cube is drawn as an outline rather than three filled faces.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100"
+    android:tint="#FFFFFF">
+    <group android:pivotX="50" android:pivotY="50" android:scaleX="0.62" android:scaleY="0.62">
+        <!-- cube silhouette -->
+        <path android:pathData="M50,10 L86,31 L86,73 L50,94 L14,73 L14,31 Z"
+            android:strokeColor="#FFFFFF" android:strokeWidth="4" android:strokeLineJoin="round" />
+        <!-- the three internal edges that read as a cube -->
+        <path android:pathData="M14,31 L50,52 L86,31 M50,52 L50,94"
+            android:strokeColor="#FFFFFF" android:strokeWidth="4" android:strokeLineJoin="round" />
+        <!-- one maze ring per face, enough to survive at 24dp -->
+        <path android:pathData="M50,20 L69,31 L50,42 L31,31 Z"
+            android:strokeColor="#FFFFFF" android:strokeWidth="3.5" android:strokeLineJoin="round" />
+    </group>
+</vector>

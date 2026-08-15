@@ -146,7 +146,7 @@ class LlmOrchestrator(
         private val TAG = LlmOrchestrator::class.simpleName
 
         private const val SYSTEM_PERSONA =
-            "You are Dicio, a helpful offline voice assistant running on the user's phone. " +
+            "You are Enclave, a helpful offline voice assistant running on the user's phone. " +
                 "Answer concisely and in the same language the user speaks. When a tool can " +
                 "fulfil the request, call it instead of guessing."
 
